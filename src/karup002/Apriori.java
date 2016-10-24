@@ -67,7 +67,6 @@ public class Apriori {
 
     private void aprioriGen(FrequentKItemSets fkminus1, FrequentKItemSets Fk) {
         int k = Fk.getOrder();
-        int key = 1;
 
         HashTreeManager hashTreeManager = HashTreeManager.getInstance();
 
@@ -79,6 +78,7 @@ public class Apriori {
              * working with Set would have added pain of treating two iterators
              * */
 
+            int key = 1;
             TreeMap<Integer, Integer> order1FreqMap = (TreeMap<Integer, Integer>) manager.getFirstOrderFrequentItemsMap();
             Integer[] indexArr = (Integer[]) order1FreqMap.keySet().toArray(new Integer[order1FreqMap.size()]); // This key set would be ordered in ascending order
 
@@ -102,6 +102,7 @@ public class Apriori {
         }
         else {
             /* (Fk-1 - Fk-1) method; merge candidates which have identical k-2 items */
+            int key = 1;
             int orderKminus1 = fkminus1.getOrder();
             int mergePrefix = orderKminus1 - 1;
             Integer[] indexArr = (Integer[]) fkminus1.getBaskets().keySet().toArray(new Integer[fkminus1.getNumberOfBaskets()]); // This key set would maintain insertion order
