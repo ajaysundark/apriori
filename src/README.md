@@ -23,3 +23,5 @@ Example input file:
 ```
 
 where first column represent the Transaction ID (0 indexed) and second column has the item ID, each representing an unique object (1- indexed)
+
+This code is submitted as a project towards completion of the course CSci 5523 at University of Minnesota, Twin Cities.
