@@ -154,10 +154,17 @@ public class TransactionManager {
         }
     }
 
+    public void resetTable() {
+        if (instance!=null) {
+            instance.transactionTable.clear();
+            instance.transactionTable = null;
+        }
+    }
+
     public static void reset() {
         if (instance!=null) {
             instance.markOrder1MapForDeletion();
-            instance.transactionTable.clear();
+            instance.resetTable();
         }
         instance = null;
     }

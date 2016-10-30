@@ -12,20 +12,24 @@ import java.util.*;
 public abstract class GenericKItemSets {
     protected final int k; // order of ItemSets
 
-    protected Map<Integer, Object> baskets;
+    protected Map<Integer, ItemSet> baskets;
 
     GenericKItemSets(int k) {
         this.k = k;
-        baskets = new LinkedHashMap<Integer, Object>(k);
+        baskets = new LinkedHashMap<Integer, ItemSet>(k);
     }
 
     public int getOrder() {
         return k;
     }
 
-    public int addBasket(Integer key, Object value) {
+    public int addBasket(Integer key, ItemSet value) {
         this.baskets.put(key, value);
         return this.baskets.size();
+    }
+
+    public ItemSet getBasket(Integer key) {
+        return baskets.get(key);
     }
 
     public int removeBasket(Integer key) {
@@ -33,7 +37,7 @@ public abstract class GenericKItemSets {
         return this.baskets.size();
     }
 
-    public Map<Integer, Object> getBaskets() {
+    public Map<Integer, ItemSet> getBaskets() {
         return baskets;
     }
 

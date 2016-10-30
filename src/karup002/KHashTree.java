@@ -6,7 +6,7 @@ import java.util.Set;
 
 /**
  * Created by karup002 on 10/21/2016.
- *
+ * Represent individual node at the hashtree
  *
  */
 public class KHashTree {
@@ -20,8 +20,8 @@ public class KHashTree {
         child = new KHashTree[branchFactor]; // create a node with potential to have "branchFactor" no of branches
     }
 
-    public void createCkMapPages(int order) {
-        CkMap = new HashMap<>(order);
+    public void createCkMapPages(int maxleafsize) {
+        CkMap = new HashMap<>(maxleafsize);
     }
 
     public int addCkInstance(int key) {

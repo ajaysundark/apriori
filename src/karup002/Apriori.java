@@ -1,5 +1,6 @@
 package karup002;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -40,7 +41,9 @@ public class Apriori {
         if (noOfTransactions>0) {
             FrequentKItemSets frequentKItemSets;
             FrequentKItemSets frequentKminus1ItemSets = order1FreqSet;
+
             store.addFktoCollection(order1FreqSet);
+            store.attachScMapforOrder1(createScMap(manager.getFirstOrderFrequentItemsMap()));
 
             while (true) {
                 ++orderK;
@@ -52,17 +55,27 @@ public class Apriori {
                 aprioriGen(frequentKminus1ItemSets, frequentKItemSets);
                 /* prune Ck and get Fk */
                 manager.supportBasedPruning(frequentKItemSets);
+                store.addFktoCollection(frequentKItemSets);
                 if (frequentKItemSets.getNumberOfBaskets()>0) {
                     System.out.println(frequentKItemSets);
                     System.out.println("------------------------------------------\n");
                 }
 
-                store.addFktoCollection(frequentKItemSets);
                 frequentKminus1ItemSets = frequentKItemSets;
             } // end Fk generation
-            TransactionManager.reset(); // we dont need you anymore!
+            TransactionManager.getInstance().resetTable(); // we dont need you anymore!
+            store.setReady(true);
         } // end check noOfTransactions
         return true;
+    }
+
+    private Map<ItemSet, Integer> createScMap(Map<Integer, Integer> firstOrderFrequentItemsMap) {
+        Map<ItemSet, Integer> order1Map = new HashMap<ItemSet, Integer>(firstOrderFrequentItemsMap.size());
+        for (Map.Entry<Integer, Integer> entry : firstOrderFrequentItemsMap.entrySet()) {
+            ItemSet itemSet = order1FreqSet.getBasket(entry.getKey());
+            order1Map.put(itemSet, entry.getValue());
+        }
+        return order1Map;
     }
 
     private void aprioriGen(FrequentKItemSets fkminus1, FrequentKItemSets Fk) {
@@ -91,14 +104,13 @@ public class Apriori {
                     *   push it to CkHashTree and Fk
                     * */
 
+//                    key = Arrays.hashCode(itemSet.getItems().toArray());
                     // Dont forget to add Ck = {key, supportCount} at HashTree & to Fk = {key, itemSet}
-                    hashTreeManager.insertCkAtTree(k, key, itemSet);
+                    hashTreeManager.insertCkAtTree(key, itemSet);
                     Fk.addBasket(key, itemSet);
-                    ++key; // maintain uniqueness of the key
+                     ++key; // maintain uniqueness of the key
                 }
             }
-
-            manager.markOrder1MapForDeletion();
         }
         else {
             /* (Fk-1 - Fk-1) method; merge candidates which have identical k-2 items */
@@ -128,9 +140,10 @@ public class Apriori {
 
                         /* then purge Ck based on infrequent subsets */
                         if(!hasInfreqSubsets(fkminus1, itemSet, orderKminus1)) {
-                            hashTreeManager.insertCkAtTree(k, key, itemSet);
+//                            key = Arrays.hashCode(itemSet.getItems().toArray());
+                            hashTreeManager.insertCkAtTree(key, itemSet);
                             Fk.addBasket(key, itemSet);
-                            ++key;
+                             ++key;
                         }
                     }
                     else break;
@@ -180,6 +193,7 @@ public class Apriori {
             }
 
             if (!fkminus1.getBaskets().containsValue(subset))
+//            if (!fkminus1.getBaskets().containsKey( Arrays.hashCode(subset.getItems().toArray()) ) )
                 return true;
 
             subset.getItems().clear();

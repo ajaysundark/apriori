@@ -36,7 +36,11 @@ public class ItemSet implements Comparable {
         return (items.size());
     }
 
-    public int removeItem(ItemSet item) {
+    public int removeLastItem() {
+        return items.pollLast();
+    }
+
+    public int removeItem(Integer item) {
         items.remove(item);
         return (items.size());
     }
@@ -114,6 +118,11 @@ public class ItemSet implements Comparable {
         if (this.getNumberOfItems()!=otherIS.getNumberOfItems()) return false;
 
         return (this.items.equals(otherIS.items));
+    }
+
+    @Override
+    public int hashCode() {
+        return this.toString().hashCode();
     }
 }
 
